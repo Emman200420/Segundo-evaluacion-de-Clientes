@@ -1,9 +1,32 @@
 <div class="container">
   <h1>{{ title }}</h1>
-  <div class="input-section">
-    <input type="text" [(ngModel)]="newTodoText" (keyup.enter)="addTodo()" placeholder="Nueva tarea...">
-    <button (click)="addTodo()">Añadir</button>
+  
+<div *ngIf="todos.length === 0" class="empty-state">
+    No hay tareas. ¡Añade una para empezar!
   </div>
+  
+  <div class="input-section">
+    <input
+      type="text"
+      [(ngModel)]="newTodoText"
+      (keyup.enter)="addTodo()"
+      [class.error]="newTodoText.length > 100"
+      placeholder="Nueva tarea...">
+
+    <span *ngIf="newTodoText.length > 100" class="error-msg">
+      Máximo 100 caracteres
+    </span>
+
+    <small>{{ newTodoText.length }} / 100</small>
+
+    <button
+      (click)="addTodo()"
+      [disabled]="newTodoText.trim() === '' || newTodoText.length > 100">
+      Añadir
+    </button>
+  </div>
+
+  
   <div class="filters">
     <button [class.active]="currentFilter === 'all'" (click)="currentFilter = 'all'">
       Todas
@@ -15,6 +38,8 @@
       Completadas
     </button>
   </div>
+
+  
   <ul class="todo-list">
     <li *ngFor="let todo of getFilteredTodos()" [class.completed]="todo.completed" class="todo-item">
       <input type="checkbox" [checked]="todo.completed" (change)="toggleTodo(todo.id)" class="todo-checkbox">
@@ -24,32 +49,13 @@
       </button>
     </li>
   </ul>
-<div class="footer">
-  <span>{{ getActiveCount() }} tareas pendientes</span>
-  <button (click)="clearCompleted()">Limpiar completadas</button>
-</div>
 
-<!--Retos extras -->
-<input
-      type="text"
-      [(ngModel)]="newTodoText"
-      [class.error]="newTodoText.length > 100"
-      placeholder="Nueva tarea...">
-    
-    <span *ngIf="newTodoText.length > 100" class="error-msg">
-      Máximo 100 caracteres
-    </span>
+  
+  <div class="footer">
+    <span>{{ getActiveCount() }} tareas pendientes</span>
+    <button (click)="clearCompleted()">Limpiar completadas</button>
+  </div>
 
-    <small>{{ newTodoText.length }} / 100</small>
-
-    <div *ngIf="todos.length === 0" class="empty-state">
-      No hay tareas. ¡Añade una para empezar!
-    </div>
-
-    <button
-      (click)="addTodo()"
-      [disabled]="newTodoText.trim() === ''">
-      Añadir
-    </button>
-
+ 
+  
 </div>
